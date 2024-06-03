@@ -65,3 +65,105 @@
             router.all('*', (req, res) => {
                 res.render('404');
             })
+
+14.Creating POST dynamic methods in this case for create.handlebars:
+    -first we go to create.handlebars and in the form we chagne action, method and names field:
+            - <form action="/create" method="POST".....name="something" and delete value=""
+    -inside index.js after express.static(...) we put :
+        app.use(express.urlencoded({extended: false})) // this gives us the values we typed in the create form and see them in the terminal console
+    -if we do this inside createController.js we will wee the info in the terminal ater typing:
+        router.post('/create', (req, res) => {
+            console.log(req.body); ///THIS I MEAN
+            res.send('hehe')
+        });
+    -we should have a place to save and handle the new information we got from the .urlencoded so we will implement this new bussines logic inside new folder:
+        -inside src we create services folder and inside it movieServise.js
+        -inside movieServise.js: 
+                const movies = []; // HERE WE STORE ALL INFOS ABOUT THE MOVIE WE JUST TYPED AND LATER WE WIIL SEE HOW TO MAKE THEM VISIBLE IN THE HOME PAGE ONE BY ONE AND NOT HARDCODED LIKE IN THE BEGINNING
+                    //ALSO here with every restart of the server we lost all the info in the movies's list so later we will see how to deal with that
+                exports.create = (movieData) => {
+                    movies.push(movieData)
+                    console.log(movies)
+                }
+        -inside createController.js:
+                router.post('/create', (req, res) => {
+                const newMovie = req.body;
+                movieService.create(newMovie)
+                res.redirect('/')
+                }) //GREAT but now we want to dynamically show the movies insde the home page so here are the next steps:
+
+                    -inside home.handlebars we have initially 3 movies but we need the template for only one so we delete 2 of them and then we do this:
+                        
+                        <section id="catalog">
+                            <h1>All Movies</h1>
+                            <div class="band">
+
+                                <!-- If there are posts for creature in the database display each of them -->
+                                <div class="flip flip-vertical">
+                                    <div class="front">
+                                        <img src="{{imageURL}}"
+                                            alt="Jungle-Cruise">
+                                    </div>
+                                    <div class="back">
+                                        <h1>{{title}}</h1>
+                                        <h2>Genre: {{genre}}</h2>
+                                        <p>Description: {{description}}</p>
+                                        <a href="#" class="details">Details</a>
+                                    </div>
+                                </div>
+
+                                
+                                <!-- If there are still no posts in the database display: -->
+                                <!-- <div class="no-posts">
+                                    <p class="no-offer">There are no posts yet...</p>
+                                </div> -->
+                            </div>
+                        </section>
+
+                    -then in homeController.js:
+                        const movieService = require('../services/movieService');
+
+                        router.get('/', (req, res) => {
+                            const movies  = movieService.getAll();
+                            res.render('home', {movies});
+                        
+                        });
+                    -in movieService.js we create the getAll():
+                        exports.getAll = () => {
+                            return movies.slice();
+                    
+                    -in home.handlebars we add the #each so it goes for every movie dynamically:
+                            
+                        <section id="catalog">
+                            <h1>All Movies</h1>
+                            <div class="band">
+
+                                {{#each movies}}
+                                    <div class="flip flip-vertical">
+                                        <div class="front">
+                                            <img src="{{imageURL}}"
+                                                alt="{{title}}">
+                                        </div>
+                                        <div class="back">
+                                            <h1>{{title}}</h1>
+                                            <h2>Genre: {{genre}}</h2>
+                                            <p>Description: {{description}}</p>
+                                            <a href="#" class="details">Details</a>
+                                        </div>
+                                    </div>
+                                {{/each}}
+
+                    
+                    <!-- If there are still no posts in the database display: -->
+                    <!-- <div class="no-posts">
+                        <p class="no-offer">There are no posts yet...</p>
+                    </div> -->
+                </div>
+            </section>
+       
+}
+                
+                    
+
+
+
