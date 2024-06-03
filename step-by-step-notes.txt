@@ -58,3 +58,10 @@
     -in the main.handlebars we put all parts that will be the same in each page in this case headers main tag and footer and inside the main tag dont forget to put {{{body}}}
     -then we go in home.handlebars for example cut the above parts and leave only the needed section 
     -after this we can delete the {laout:false} inside the home render in homeController.js
+    -we do this to render every page and 404 error page we render in routes.js after all controllers:
+            router.use(homeController);
+            router.use(createController);
+
+            router.all('*', (req, res) => {
+                res.render('404');
+            })
