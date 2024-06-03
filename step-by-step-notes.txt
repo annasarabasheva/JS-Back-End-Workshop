@@ -6,4 +6,26 @@
 6.in package.json : "start": "nodemon src/index.js 
 7.in the main folder in the terminal : npm start
 8.configuration of server and handlebars in index.js: 
--
+        const express = require('express');
+        const app = express();
+        const handlebars = require('express-handlebars');
+        const path = require('path');
+
+
+        app.engine('handlebars', handlebars.engine());
+        app.set('view engine', 'handlebars');
+        app.set('views', path.join(__dirname, 'views')) // Creating foldern inside src folder named 'views'
+
+        // Inside views folder we create our first home.handlebar and type some h1 to see if it works with render function:
+        app.get('/', (req, res) => {
+            res.render('home', { layout: false });
+        
+        })
+
+
+        app.listen(5000, () => {console.log('Server is listening on port 5000...')});
+
+
+9.Creating static folder inside src and inside we put the img and css folders, and inside views we put all html folders
+10.Inside index.js file we put this: app.use(express.static(path.join(__dirname, 'static'))); 
+11.Inside the home.handlebars we remove all the unneccesarry part of the href so we remove the './static' part and the css and img should be visible
