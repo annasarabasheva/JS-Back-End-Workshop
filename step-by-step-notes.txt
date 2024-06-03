@@ -1,0 +1,9 @@
+1.npm init -y
+2.npm i -D nodemon
+3.npm i express
+4.npm i express-handlebars
+5.src folder in which will be the main logic and the index.js file
+6.in package.json : "start": "nodemon src/index.js 
+7.in the main folder in the terminal : npm start
+8.configuration of server and handlebars in index.js: 
+-
