@@ -29,3 +29,28 @@
 9.Creating static folder inside src and inside we put the img and css folders, and inside views we put all html folders
 10.Inside index.js file we put this: app.use(express.static(path.join(__dirname, 'static'))); 
 11.Inside the home.handlebars we remove all the unneccesarry part of the href so we remove the './static' part and the css and img should be visible
+12.Render the pages using controllers: 
+    - inside src we create routes.js
+    -inside src create folder controllers and inside it we will create files for each page
+    -for example we create homeControllers.js in which we render the /home page and visualize it
+    -here is how the routes.js should look and what we want to stick with: 
+
+                const router = require('express').Router();
+
+                const homeController = require('./controllers/homeController');
+                router.use(homeController);
+
+                module.exports = router;
+    - here is the homeControllers.js :
+        	    const router = require('express').Router();
+
+                router.get('/', (req, res) => {
+                    res.render('home', { layout: false });
+                
+                }) 
+
+                module.exports = router;
+    -inside index.js we put these lines of code in order to connect all files: 
+                const routes = require('./routes');
+                app.use(routes);
+
