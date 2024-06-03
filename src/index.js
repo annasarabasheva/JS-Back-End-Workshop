@@ -12,6 +12,7 @@ app.set('view engine', 'handlebars');
 app.set('views', path.join(__dirname, 'views'))
 
 app.use(express.static(path.join(__dirname, 'static')));
+app.use(express.urlencoded({extended: false}))
 
 
 
