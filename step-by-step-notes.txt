@@ -162,6 +162,76 @@
        
                 
 15.Create details page
+    -inside movieService.js:
+        const movies = [
+            {   _id: 1,
+                title: 'vbdbd',
+                genre: '',
+                director: '',
+                year: '',
+                imageURL: '',
+                rating: '',
+                description: ''
+            }
+        ];
+        exports.create = (movieData) => {
+            movieData._id = movies[movies.length - 1]._id +  1 //Creating movie._id cause we need unique identity of each movie
+            movies.push(movieData)
+    
+            }
+
+    -inside home.handlebars we put the href to the details page:
+         <a href="/details/{{_id}}" class="details">Details</a>
+
+    -inside createController.js: 
+        router.get('/details/:movieId', (req, res) => {
+            res.render('details');
+        });
+    -Now we have to do dynamically the details page in the following way:
+        -inside details.handlebars:
+            <section id="details-page">
+
+                <div class="main_card">
+                    <div class="card_left">
+                        <div class="card_datails">
+
+                            <h1>{{movie.title}}</h1>
+                            <div class="card-movie">
+                                <div class="first-info">
+                                    <p class="card-genre">Genre: {{movie.genre}}</p>
+                                    <p class="card-director">Directror: {{movie.director}}</p>
+                                </div>
+                                <div class="second-info">
+                                    <p class="card-year">Year: {{movie.year}}</p>
+                                    <p class="card-ranking">Rating: <span id="stars">&#x2605; &#x2605; &#x2605;
+                                            &#x2605;</span></p>
+                                </div>
+
+                            </div>
+
+                            <p class="disc">Description: {{movie.description}}</p>
+                        </div>
+                    </div>
+                    <div class="card_right">
+                        <img src="{{movie.imageURL}}"
+                            alt="image">
+                    </div>
+                </div>
+
+            </section>
+
+        -inside createController.js :
+            router.get('/details/:movieId', (req, res) => {
+                const movieId = req.params.movieId;
+                const movie = movieService.getOne(movieId);
+                res.render('details', {movie});
+            });
+        -inside movieService.js:
+            exports.getOne = (movieId) => {
+                return movies.find(movie => movie._id == movieId);
+            }
+
+
 
 
 

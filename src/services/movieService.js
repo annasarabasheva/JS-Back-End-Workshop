@@ -10,7 +10,9 @@ const movies = [
       }
 ];
 
-
+exports.getOne = (movieId) => {
+    return movies.find(movie => movie._id == movieId);
+}
 exports.getAll = () => {
     return movies.slice();
 }
