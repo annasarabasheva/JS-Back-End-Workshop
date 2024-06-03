@@ -130,7 +130,7 @@
                         });
                     -in movieService.js we create the getAll():
                         exports.getAll = () => {
-                            return movies.slice();
+                            return movies.slice();}
                     
                     -in home.handlebars we add the #each so it goes for every movie dynamically:
                             
@@ -151,19 +151,17 @@
                                             <a href="#" class="details">Details</a>
                                         </div>
                                     </div>
+                                {{else}}
+                                    <div class="no-posts">
+                                        <p class="no-offer">There are no posts yet...</p>
+                                    </div> 
                                 {{/each}}
 
-                    
-                    <!-- If there are still no posts in the database display: -->
-                    <!-- <div class="no-posts">
-                        <p class="no-offer">There are no posts yet...</p>
-                    </div> -->
-                </div>
-            </section>
+                            </div>
+                        </section>
        
-}
                 
-                    
+15.Create details page
 
 
 
