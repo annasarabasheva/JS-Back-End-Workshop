@@ -14,7 +14,7 @@
 
         app.engine('handlebars', handlebars.engine());
         app.set('view engine', 'handlebars');
-        app.set('views', path.join(__dirname, 'views')) // Creating foldern inside src folder named 'views'
+        app.set('views', path.join(__dirname, 'views')) // Creating folder inside src folder named 'views'
 
         // Inside views folder we create our first home.handlebar and type some h1 to see if it works with render function:
         app.get('/', (req, res) => {
@@ -30,7 +30,7 @@
 10.Inside index.js file we put this: app.use(express.static(path.join(__dirname, 'static'))); 
 11.Inside the home.handlebars we remove all the unneccesarry part of the href so we remove the './static' part and the css and img should be visible
 12.Render the pages using controllers: 
-    - inside src we create routes.js
+    -inside src we create routes.js
     -inside src create folder controllers and inside it we will create files for each page
     -for example we create homeControllers.js in which we render the /home page and visualize it
     -here is how the routes.js should look and what we want to stick with: 
@@ -41,6 +41,7 @@
                 router.use(homeController);
 
                 module.exports = router;
+
     - here is the homeControllers.js :
         	    const router = require('express').Router();
 
@@ -50,6 +51,7 @@
                 }) 
 
                 module.exports = router;
+
     -inside index.js we put these lines of code in order to connect all files: 
                 const routes = require('./routes');
                 app.use(routes);
@@ -67,11 +69,11 @@
             })
 
 14.Creating POST dynamic methods in this case for create.handlebars:
-    -first we go to create.handlebars and in the form we chagne action, method and names field:
-            - <form action="/create" method="POST".....name="something" and delete value=""
+    -first we go to create.handlebars and in the form we change action, method and names field:
+         - <form action="/create" method="POST".....name="something" and delete value=""
     -inside index.js after express.static(...) we put :
         app.use(express.urlencoded({extended: false})) // this gives us the values we typed in the create form and see them in the terminal console
-    -if we do this inside createController.js we will wee the info in the terminal ater typing:
+    -if we do this inside createController.js we will see the info in the terminal after typing:
         router.post('/create', (req, res) => {
             console.log(req.body); ///THIS I MEAN
             res.send('hehe')
