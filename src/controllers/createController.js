@@ -23,4 +23,10 @@ router.get('/details/:movieId', async (req, res) => {
     res.render('details', {movie});
 });
 
+
+
+router.get('/attach/:movieId', (req, res) => {
+    res.render('cast-attach')
+});
+
 module.exports = router;
