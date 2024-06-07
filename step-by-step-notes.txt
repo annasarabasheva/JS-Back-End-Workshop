@@ -308,6 +308,19 @@
                 
             }
 
+        -now we have to get the exsiting daTA from the database and actually display it on home page:
+            -in movieService:
+                exports.getAll =  () => Movie.find();
+                exports.create = (movieData) => Movie.create(movieData); 
+            
+            -in homeController:
+                router.get('/', async (req, res) => {
+                    const movies  = await movieService.getAll().lean(); //wihtout lean its a document and we need it as objects so thats why we use lean()
+                    res.render('home', {movies});
+                
+                });
+
+
 
 
 

@@ -17,11 +17,5 @@ const movies = [
 exports.getOne = (movieId) => {
     return movies.find(movie => movie._id == movieId);
 }
-exports.getAll = () => {
-    return movies.slice();
-}
-exports.create = async (movieData) => {
-    const result = await Movie.create(movieData);
-    return result;
-    
-}
+exports.getAll =  () => {  return  Movie.find() }
+exports.create = async (movieData) => { return await Movie.create(movieData); }
