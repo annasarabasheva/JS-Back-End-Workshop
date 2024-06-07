@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const handlebars = require('express-handlebars');
 const path = require('path');
+const mongoose = require('mongoose');
 
 const routes = require('./routes')
 
@@ -14,6 +15,8 @@ app.set('views', path.join(__dirname, 'views'))
 app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.urlencoded({extended: false}))
 
+mongoose.connect(`mongodb://localhost:27017/movies`)
+    .then(() => {console.log(`DB Connected`)});
 
 
 app.use(routes)

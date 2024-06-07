@@ -233,7 +233,9 @@
                 return movies.find(movie => movie._id == movieId);
             }
 
-
+16.MONGODB AND MONGOOSE PART 2 OF THE WORKSHOP:
+    -npm install mongoose
+    
 
 
 
