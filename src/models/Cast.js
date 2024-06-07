@@ -12,7 +12,7 @@ const castSchema = mongoose.Schema({
         max: 120,
     },
     born: {
-        type: Number,
+        type: String,
         required: true,
     },
     nameInMovie: {
@@ -20,7 +20,7 @@ const castSchema = mongoose.Schema({
         required: true,
     },
     castImage: {
-        type: Number,
+        type: String,
         required: true,
         match: /^https?/,
     },

@@ -322,19 +322,123 @@
         -lets remove everything we dont need to start working only with the database and movieService should look like this now:
             const Movie = require('../models/Movie')
 
-            exports.getOne = (movieId) => {
-                const movie = Movie.findById(movieId);
-                return movie;
-            }
+            exports.getOne = (movieId) => { Movie.findById(movieId)};
             exports.getAll =  () => Movie.find();
             exports.create = (movieData) => Movie.create(movieData); 
-            
+
         -lets also fix the getOne() inside createController:
             router.get('/details/:movieId', async (req, res) => {
                 const movieId = req.params.movieId;
                 const movie = await movieService.getOne(movieId).lean();
                 res.render('details', {movie});
             });
+
+17.Lets create new pages:
+-first is the /create/cast page:
+    -we create castController.js inside controllers
+    -inside it :
+        const router = require('express').Router();
+
+        router.get('/create/cast', (req, res) => {
+            res.render('cast-create') //DO ALL STEPS FOR THE cast-create.handlebars (deleting header and footer and if needed adding something in layout main in this case in nav we add create post li)
+        })
+
+        module.exports = router;
+    DONT FORGET TO ADD IN routes.js: 
+        const castController = require('./controllers/castController');
+        router.use(castController);
+
+-now lets see how to actually post casts:
+    -fix our handlebar in this case fix the form how its been given in the word file with the right name values:
+        
+            <section id="create-cast">
+                <div class="createCastSection">
+                    <div class="info-cast">
+                        <h2>"You're gonna need a bigger boat." — "Jaws," 1975.</h2>
+                    </div>
+
+                    <form action="/create/cast" method="POST" class="createCastForm">
+                        <h2>Add Cast</h2>
+                        <ul class="noBullet">
+                            <li>
+                                <label for="name">Name:</label>
+                                <input type="text" class="inputFields" id="name" name="name" />
+                            </li>
+                            <li>
+                                <label for="age">Age:</label>
+                                <input type="number" class="inputFields" id="age" name="age" />
+                            </li>
+                            <li>
+                                <label for="born">Born:</label>
+                                <input type="text" class="inputFields" id="born" name="born"/>
+                            </li>
+                            <li>
+                                <label for="name-in-movie">Name in Movie:</label>
+                                <input type="text" class="inputFields" id="name-in-movie" name="nameInMovie"/>
+                            </li>
+                            <li>
+                                <label for="image">Cast Image:</label>
+                                <input type="text" class="inputFields" id="image" name="castImage" />
+                            </li>
+                            <li id="center-btn">
+                                <button id="create-btn">Add Cast</button>
+                            </li>
+                        </ul>
+                    </form>
+
+                </div>
+            </section>
+
+    -now we create castServise in the service folder just like we did in the movieService the logic is the same
+    -also create Cast.js in models folder to create our model for the cats:
+        const mongoose = require('mongoose');
+
+        const castSchema = mongoose.Schema({
+            name: {
+                type: String,
+                required: true,
+            },
+            age: {
+                type: Number,
+                required: true,
+                min: 14,
+                max: 120,
+            },
+            born: {
+                type: String,
+                required: true,
+            },
+            nameInMovie: {
+                type: String,
+                required: true,
+            },
+            castImage: {
+                type: String,
+                required: true,
+                match: /^https?/,
+            },
+
+        });
+
+
+        const Cast = mongoose.model('Cast', castSchema);
+
+        module.exports = Cast;
+
+    -inside castServise.js:
+        const Cast = requrie('../models/Cast');
+
+        exports.create = (castData) => Cast.create(castData);
+    -inside castController:
+        const castService = require('../services/castService');
+
+        router.post('/create/cast', async (req, res) => {
+            const castData = req.body;
+            await castService.create(castData)
+
+            res.redirect('/')
+        });
+
 
 
 
