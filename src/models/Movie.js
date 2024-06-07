@@ -30,7 +30,7 @@ const movieSchema = new mongoose.Schema( {
         required: true,
         maxLength: 1000,
     },
-    imageUrl: {
+    imageURL: {
         type: String,
         required: true,
         match: /^https?/,
@@ -39,6 +39,6 @@ const movieSchema = new mongoose.Schema( {
  
 })
 
-const Model = mongoose.model('Movie', movieSchema);
+const Movie = mongoose.model('Movie', movieSchema);
 
-module.exports = Model;
+module.exports = Movie;

@@ -237,7 +237,7 @@
     -npm install mongoose
     -inside index.js:
         const mongoose = require('mongoose');
-        mongoose.connect(`mongodb://localhost:27017/magic-movies`) // 'movies' is the name of the collection in the database
+        mongoose.connect(`mongodb://localhost:27017/magic-movies`) //magic-movies is the name of the database
             .then(() => {console.log(`DB Connected`)});
 
     -creating models:
@@ -275,7 +275,7 @@
                     required: true,
                     maxLength: 1000,
                 },
-                imageUrl: {
+                imageURL: {
                     type: String,
                     required: true,
                     match: /^https?/,
@@ -284,9 +284,30 @@
             
             })
 
-            const Model = mongoose.model('Movie', movieSchema);
+            const Movie = mongoose.model('Movie', movieSchema); //Movie is the name of the model with which we will create our movies and mongoose will create this collection by itself as its plural form 'movies' 
 
-            module.exports = Model;
+            module.exports = Movie;
+    
+    -next step is to save our movies using mongodb:
+        -inside createController:
+            router.post('/create', async (req, res) => {
+                const newMovie = req.body;
+                try {
+                    await movieService.create(newMovie);
+                    res.redirect('/')
+                } catch(err) {
+                    console.log(err.message);
+                    res.redirect('/create')
+                }
+                
+            });
+        -inside movieService:
+            exports.create = async (movieData) => {
+                const result = await Movie.create(movieData);
+                return result;
+                
+            }
+
 
 
 
