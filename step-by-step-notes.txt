@@ -480,6 +480,116 @@
             </div>
             </section>
 
+-lets attach from all casts we have : 
+    -inside castService:
+        exports.getAll = () => Cast.find()
+    -inside createController:
+        router.get('/attach/:movieId', async (req, res) => {
+            const movieId = req.params.movieId;
+            const movie = await movieService.getOne(movieId).lean();
+            const casts = await castService.getAll().lean();
+            res.render('cast-attach', {...movie, casts});
+        });
+    -inside cast-attach.handlebars:
+        
+            <section id="attachCast">
+                <div class="attachCastSection">
+                <h1>Attach New Cast</h1>
+                <div class="attach-form">
+                    <h2>{{title}}</h2>
+                    <img class="movie" src="{{imageURL}}">
+                    <form action="" method="">
+                        <label for="cast">Cast</label>
+                        <select id="cast" name="cast">
+                            <option value="none" selected>--------</option>
+                            {{#each casts}}
+                                <option value="{{_id}}">{{name}}</option>
+                            {{/each}}
+                        </select>
+                        <div id="center-btn">
+                            <button id="create-btn">Add Cast</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            </section>
+    -NEXT STEP IS TO CONNEXT THE CAST TO THE MOVIE WITH THE BUTTON ADD CAST SO GETTING A POST METHOD:
+        -fixing the cast-attach.handlebars form:
+          <form action="/attach/{{_id}}" method="POST">
+        
+        -then we go in Movie.js to add aditional property to the model:
+            casts: [{
+                type: mongoose.Types.ObjectId,
+                ref: 'Cast',
+            }],
+        -then inside createController.js we create the post method:
+            router.post('/attach/:movieId', async (req, res) => {
+            const castId = req.body.cast;
+            const movie = await movieService.getOne(req.params.movieId);
+            movie.casts.push(castId);
+            await movie.save();
+            res.redirect(`/attach/${req.params.movieId}`)
+            
+        })
+
+    -next step is to update the details page with the cast:
+        -Inside details.handlebars:
+             <section id="details-page">
+
+                <div class="main_card">
+                    <div class="card_left">
+                        <div class="card_datails">
+
+                            <h1>{{movie.title}}</h1>
+                            <div class="card-movie">
+                                <div class="first-info">
+                                    <p class="card-genre">Genre: {{movie.genre}}</p>
+                                    <p class="card-director">Directror: {{movie.director}}</p>
+                                </div>
+                                <div class="second-info">
+                                    <p class="card-year">Year: {{movie.year}}</p>
+                                    <p class="card-ranking">Rating: <span id="stars">&#x2605; &#x2605; &#x2605;
+                                            &#x2605;</span></p>
+                                </div>
+
+                            </div>
+
+                            <p class="disc">Description: {{movie.description}}</p>
+                        </div>
+                    </div>
+                    <div class="card_right">
+                        <img src="{{movie.imageURL}}"
+                            alt="image">
+                    </div>
+                </div>
+
+                <div class="main-cast-card">
+                    {{#each movie.casts}}
+                    <div class="cast-card">
+                        <div class="card-img">
+                            <img src="{{castImage}}"
+                                alt="cast">
+                        </div>
+                        <div class="cast-info">
+                            <h1>{{name}}</h1>
+                            <h3>Age: {{age}}</h3>
+                            <h3>Born: {{born}}</h3>
+                            <h3>Name in Movie: {{nameInMovie}}</h3>
+                        </div>
+                    </div>
+                    {{/each}}
+                    
+                </div>
+
+            </section>
+
+    -INSIDE movieService.js:
+        exports.getOne = (movieId) =>  Movie.findById(movieId).populate('casts'); !!!!!!!!!!!!!!!!!!!!!!!!
+
+
+
+
+
 
 
 
