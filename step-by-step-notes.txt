@@ -235,7 +235,60 @@
 
 16.MONGODB AND MONGOOSE PART 2 OF THE WORKSHOP:
     -npm install mongoose
-    
+    -inside index.js:
+        const mongoose = require('mongoose');
+        mongoose.connect(`mongodb://localhost:27017/magic-movies`) // 'movies' is the name of the collection in the database
+            .then(() => {console.log(`DB Connected`)});
+
+    -creating models:
+        -create folder models and inside it create Movie.js where we will create the schema for the movies we want to create;
+        -inside Movie.js:
+            const mongoose = require('mongoose');
+
+            const movieSchema = new mongoose.Schema( {
+                title: {
+                    type: String,
+                    required: true,
+                },
+                genre: {
+                    type: String,
+                    required: true,
+                },
+                director: {
+                    type: String,
+                    required: true,
+                },
+                year: {
+                    type: Number,
+                    required: true,
+                    min: 1900,
+                    max: 2030,
+                },
+                rating: {
+                    type: Number,
+                    required: true,
+                    min: 1,
+                    max: 5,
+                }, 
+                description: {
+                    type: String,
+                    required: true,
+                    maxLength: 1000,
+                },
+                imageUrl: {
+                    type: String,
+                    required: true,
+                    match: /^https?/,
+                },
+
+            
+            })
+
+            const Model = mongoose.model('Movie', movieSchema);
+
+            module.exports = Model;
+
+
 
 
 
