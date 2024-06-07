@@ -439,6 +439,47 @@
             res.redirect('/')
         });
 
+18.Lets create attach page
+-delete anything unneccesarry in cast-attach.handlebar(header and footer)
+-now we go in createController.js:
+   
+    router.get('/details/:movieId', async (req, res) => {
+        const movieId = req.params.movieId;
+        const movie = await movieService.getOne(movieId).lean();
+        res.render('details', {movie});
+    });
+
+
+-then we go to the home.handlebars to add the attach button right next to the details one and do this to add the path:
+    <a href="/details/{{_id}}" class="details">Details</a>
+    <a href="/attach/{{_id}}" class="details">Attach</a>
+
+-then in cast-attach.handlebars we change things correctly: 
+    
+            <section id="attachCast">
+                <div class="attachCastSection">
+                <h1>Attach New Cast</h1>
+                <div class="attach-form">
+                    <h2>{{movie.title}}</h2>
+                    <img class="movie" src="{{movie.imageURL}}">
+                    <form action="" method="">
+                        <label for="cast">Cast</label>
+                        <select id="cast" name="cast">
+                        <option value="none" selected>--------</option>
+                        <option value="Cast 1">Cast 1</option>
+                        <option value="Cast 2">Cast 2</option>
+                        <option value="Cast 3">Cast 3</option>
+                        <option value="Cast 4">Cast 4</option>
+                        <option value="Cast 5">Cast 5</option>
+                        </select>
+                        <div id="center-btn">
+                            <button id="create-btn">Add Cast</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            </section>
+
 
 
 
