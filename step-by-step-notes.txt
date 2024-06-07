@@ -319,6 +319,24 @@
                     res.render('home', {movies});
                 
                 });
+        -lets remove everything we dont need to start working only with the database and movieService should look like this now:
+            const Movie = require('../models/Movie')
+
+            exports.getOne = (movieId) => {
+                const movie = Movie.findById(movieId);
+                return movie;
+            }
+            exports.getAll =  () => Movie.find();
+            exports.create = (movieData) => Movie.create(movieData); 
+            
+        -lets also fix the getOne() inside createController:
+            router.get('/details/:movieId', async (req, res) => {
+                const movieId = req.params.movieId;
+                const movie = await movieService.getOne(movieId).lean();
+                res.render('details', {movie});
+            });
+
+
 
 
 
