@@ -697,6 +697,44 @@ router.post('/register', async (req, res) => {
         
         this.password = hash;
     });
+    -now we wanna validate the rePassword again in User.js:
+        userSchema.virtual('rePassword')
+            .set(function(value) {
+                if(value !== this.password) {
+                    throw new Error('Password missmatch !')
+                }
+            });
+
+
+
+
+19.Now lets implement login page:
+<section id="login-page">
+
+                <div class="loginSection">
+                    <div class="info">
+                        <h2>"My mama always said life was like a box of chocolates. You never know what you're gonna get."</h2>
+                    </div>
+                    <form action="/login" method="POST" class="loginForm">
+                        <h2>Login</h2>
+                        <ul class="noBullet">
+                            <li>
+                                <label for="email">Email:</label>
+                                <input type="text" class="inputFields" id="email" name="email"/>
+                            </li>
+                            <li>
+                                <label for="password">Password:</label>
+                                <input type="password" class="inputFields" id="password" name="password" />
+                            </li>
+
+                            <li id="center-btn">
+                                <button id="login-btn">Login</button>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+
+            </section>
 
 
 
