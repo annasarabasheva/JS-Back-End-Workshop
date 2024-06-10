@@ -662,7 +662,8 @@
     const userSchema = new mongoose.Schema( {
         email: {
             type: String,
-            required: true,
+            required: true,\
+            unique: true,
         },
         password: {
             type: String,
@@ -737,7 +738,14 @@ router.post('/register', async (req, res) => {
             </section>
 
 
+-inside authController:
+    router.post('/login', async (req, res) => {
+    const {email, password} = req.body;
+    await authService.login(email, password);
+});
 
+
+-inside authService lets create our login function:
 
 
 
