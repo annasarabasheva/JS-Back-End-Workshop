@@ -814,6 +814,16 @@ router.post('/register', async (req, res) => {
     const cookieParser = require('cookie-parser');
     app.use(cookieParser());
 
+-then again in authController:
+    
+    router.post('/login', async (req, res) => {
+        const {email, password} = req.body;
+        const token = await authService.login(email, password);
+        res.cookie('auth', token); // THIS WE UPDATED
+        
+        res.redirect('/')
+    });
+
 
 
 
