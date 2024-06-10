@@ -745,7 +745,75 @@ router.post('/register', async (req, res) => {
 });
 
 
--inside authService lets create our login function:
+-inside authService lets create our login function and dont forget to install npm i jsonwebtoken:
+
+        const bcrypt = require('bcrypt');
+        const jwt = require('../lib/jwt');
+        const  SECRET = 'jikhfljmlk;w;fj56fsefef'
+
+        exports.register = (userData) => User.create(userData);
+        exports.login = async (email, password) => {
+
+            //Get user from db
+            const user = await User.findOne({email});
+
+            //Check if user exists
+            if (!user) {
+                throw new Error('Cannot find username or password');
+            }
+            //Check if password is valid
+            const isValid = await bcrypt.compare(password, user.password);
+            if(!isValid) {
+                throw new Error('Cannot find username or password')
+
+            }
+            //Generate jwt token: dont forget to npm i jsonwebtoken! //THIS WE DO IN SEPARATE FOLDER lib inside jwt.js
+            const payload = {
+                _id: user._id,
+                email:user.email,
+            };
+
+            const token = await jwt.sign(payload, SECRET)
+            //return token
+            return token;
+        }
+    -inside jwt.js:
+        
+        const jwt = require('jsonwebtoken');
+
+        function sign(payload, secretOrPrivateKey, options = {}) {
+            const promise = new Promise((resolve, reject) => {
+                jwt.sign(payload, secretOrPrivateKey, options, (err, token) => {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    resolve(token);
+                })
+            });
+
+            return promise;
+        }
+
+
+        module.exports = {
+            sign,
+        
+        };
+-inside authController:
+    
+    router.post('/login', async (req, res) => {
+        const {email, password} = req.body;
+        const token = await authService.login(email, password); //IN THE NEXT STEPS WE WILL SEE HOW TO CONTINUE THIS
+        
+        res.redirect('/')
+    });
+
+-next step is to install npm i cookie-parser
+-inside index.js: 
+    const cookieParser = require('cookie-parser');
+    app.use(cookieParser());
+
 
 
 
