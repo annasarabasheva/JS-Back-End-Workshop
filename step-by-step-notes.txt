@@ -688,7 +688,15 @@ router.post('/register', async (req, res) => {
     res.redirect('/login')
 
 })
-
+18.NOW LETS HASH THE PASSWORD:
+    -install bcrypt
+    -inside User.js:
+    const bcrypt = require('bcrypt');
+    userSchema.pre('save', async function() { //PRE MEANS before saving the model here we hash the password
+        const hash = await bcrypt.hash(this.password, 12);
+        
+        this.password = hash;
+    });
 
 
 
