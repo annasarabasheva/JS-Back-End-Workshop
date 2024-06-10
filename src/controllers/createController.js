@@ -43,4 +43,12 @@ router.post('/attach/:movieId', async (req, res) => {
     
 })
 
+
+router.get('/edit/:movieId', (req, res) => {
+    res.render('edit')
+});
+
+
+
+
 module.exports = router;
