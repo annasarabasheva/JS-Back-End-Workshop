@@ -587,9 +587,8 @@
         exports.getOne = (movieId) =>  Movie.findById(movieId).populate('casts'); !!!!!!!!!!!!!!!!!!!!!!!!
 
 
-
-
-
+17.PART P OF THE WORKSHOP: Session and authentication
+-first we add the new resources
 
 
 
