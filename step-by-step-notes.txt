@@ -608,9 +608,19 @@
 
         </nav>
 
+-now lets do everything we need to first implement the register.html so we do everything we already did with the other hmtl pages
 
+-then we create new controller for authorization pages: login, logout, register, called: authController.js:
+    const router = require('express').Router();
 
+    router.get('/register', (req, res) => {
+        res.render('register')
+    })
 
+    module.exports = router;
+-inside routes.js dont forget: 
+    const authController = require('./controllers/authController');
+    router.use(authController);
 
 
 
