@@ -938,3 +938,44 @@ router.post('/register', async (req, res) => {
         res.render('edit', {movie})
     });
 
+-   NOW LETS MAKE AUTHORIZATION: VURNI SE PAK DA GO GLEDASH CHE SE OBURKAH: 2:26:11 VUV LEKCIQTA
+    create new folder middlewares and inside it lets create authMiddleware.js 
+    -its created to validate the token of the people who are logged in
+    -inside index.js:
+        const {auth} = require('../middlewares/authMiddleware');
+
+        app.use(auth);
+    -inside jwt.js:
+        const util = require('util');
+        const jwt = require('jsonwebtoken');
+
+        function sign(payload, secretOrPrivateKey, options = {}) {
+            const promise = new Promise((resolve, reject) => {
+                jwt.sign(payload, secretOrPrivateKey, options, (err, token) => {
+                    if (err) {
+                        return reject(err);
+                    }
+
+                    resolve(token);
+                })
+            });
+
+            return promise;
+        }
+
+        const verify = util.promisify(jwt.verify); // thats the new thing
+
+        module.exports = {
+            sign,
+            verify,
+        };
+    
+    -inside config folder we put the secret:
+        module.exports = {
+            SECRET: 'ad89fnkj4nifkasd89f34uj4naw534289u74'
+        }
+    -inside authService and authMiddleware we import it like this: const { SECRET } = require('../config/config');
+    -inside authMiddleware:
+
+
+

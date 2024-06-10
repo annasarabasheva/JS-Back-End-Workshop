@@ -1,11 +1,13 @@
 const express = require('express');
 const app = express();
+const routes = require('./routes')
 const handlebars = require('express-handlebars');
 const path = require('path');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 
-const routes = require('./routes')
+const {auth} = require('./middlewares/authMiddleware');
+
 
 
 
@@ -17,6 +19,7 @@ app.use(express.static(path.join(__dirname, 'static')));
 app.use(express.urlencoded({extended: false}));
 
 app.use(cookieParser());
+app.use(auth) //its important to be after the cookieParser()
 
 mongoose.connect(`mongodb://localhost:27017/magic-movies`)
     .then(() => {console.log(`DB Connected`)});
