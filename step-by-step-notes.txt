@@ -1012,7 +1012,7 @@ router.post('/register', async (req, res) => {
         });
     -now lets improve our code and create another middleware inside authMiddleware:
         
-        exports.isAuth = (req, res) => {
+        exports.isAuth = (req, res, next) => {
             if (!req.user) {
                 return res.redirect('/login');
             }
@@ -1066,5 +1066,32 @@ router.post('/register', async (req, res) => {
         {{/if}}
 
 
+    -NEXT STEP IS TO MAKE THE NAVIGATION BAR TO WORK PROPERLY:
+    -inside main.handlebars:
+        <ul class="menu">
+                <li><a href="/">Home</a></li>
+                <li><a href="/about">About</a></li>
+                <li><a href="/search">Search</a></li>
+                {{#if isAuthenticated}} // we have specific property of handlebars to make this available for every page 
+                <li><a href="/create">Create Post</a></li>
+                <li><a href="/create/cast">Create Cast</a></li>
+                <li><a href="/logout">Logout</a></li>
+                {{else}}
+                <li><a href="/login">Login</a></li>
+                <li><a href="/register">Register</a></li>
+                {{/if}}
+            </ul>
 
+    -then we go inside authMiddleware:
+        try {
+        const decodedToken = await jwt.verify(token, SECRET);
 
+        req.user = decodedToken;
+        res.locals.isAuthenticated = true; //HERE IS THE UPDATE WITH .locals WE CHECK THIS FOR EVERY SINGLE PAGE WITHOUT DOING IT mannually
+
+        next();
+    } catch {
+        res.clearCookie('auth');
+
+        res.redirect('/login');
+    }
