@@ -1109,3 +1109,14 @@ router.post('/register', async (req, res) => {
         });
     -and then inside movieService to implement the logic for the delete method:
         exports.delete = (movieId) => Movie.findByIdAndDelete(movieId);
+
+-LASTLY LETS FINISH THE EDIT BUTTON CAUSE WE ONLY STARTED IT:
+    -inside createController:
+        router.post('/edit/:movieId', isAuth, async (req, res) => {
+            const editedMovie = req.body;
+            await movieService.edit(req.params.movieId, editedMovie);
+
+            res.redirect(`/details/${req.params.movieId}`);
+        });
+    -and now lets implement the logic for the edit() inside movieService:
+        exports.edit = (movieId, movieData) => Movie.findByIdAndUpdate(movieId, movieData);
