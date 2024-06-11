@@ -8,7 +8,12 @@ router.get('/create', isAuth, (req, res) => {
 });
 
 router.post('/create', isAuth, async (req, res) => {
-    const newMovie = req.body;
+    const newMovie = {
+        ...req.body,
+        owner: req.user._id,
+    };
+
+
     try {
         await movieService.create(newMovie);
         res.redirect('/')
@@ -22,7 +27,9 @@ router.post('/create', isAuth, async (req, res) => {
 router.get('/details/:movieId', async (req, res) => {
     const movieId = req.params.movieId;
     const movie = await movieService.getOne(movieId).lean();
-    res.render('details', {movie});
+    const isOwner = movie.owner == req.user._id;
+
+    res.render('details', {movie, isOwner});
 });
 
 

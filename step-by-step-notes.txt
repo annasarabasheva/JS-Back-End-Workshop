@@ -1010,7 +1010,60 @@ router.post('/register', async (req, res) => {
             const movie =  await movieService.getOne(req.params.movieId).lean();
             res.render('edit', {movie})
         });
+    -now lets improve our code and create another middleware inside authMiddleware:
+        
+        exports.isAuth = (req, res) => {
+            if (!req.user) {
+                return res.redirect('/login');
+            }
+            next();
+    -then we go in createController and put it inside all get/post methods we want :
+        const {isAuth} = require('../middlewares/authMiddleware');
+        we insert it in the middle like this:
+        router.get('/edit/:movieId', isAuth, async (req, res) => {
+            const movie =  await movieService.getOne(req.params.movieId).lean();
+            res.render('edit', {movie})
+        });
+        AND THIS CHECKS IF THE TOKEN IS CORRECTLY SAVED AND IF THE PERSON IS AUTHORIZED TO TO CERTAIN THINGS 
 
+}
+
+-NOW LETS MAKE THE EDIT AND DELETE BUTTONS IN DETAILS PAGE ONLY VISIBLE FOR OWNERS IN SOME STEPS:
+    -we need new relation in Movie.js called owner so lets make it:
+          owner: {
+            type: mongoose.Types.ObjectId,
+            ref: 'User',
+        },
+    -now in createControll when we create new movie we will have this onwer property:
+        router.post('/create', isAuth, async (req, res) => {
+            const newMovie = req.body;
+            newMovie.owner = req.user._id; //THIS HERE
+            
+            try {
+                await movieService.create(newMovie);
+                res.redirect('/')
+            } catch(err) {
+                console.log(err.message);
+                res.redirect('/create')
+            }
+            
+        })
+    -now in details page we have to check if the logged user is actually the owner of this movie and will see the edit and delete buttons and here is how we do this:
+        
+        router.get('/details/:movieId', async (req, res) => {
+            const movieId = req.params.movieId;
+            const movie = await movieService.getOne(movieId).lean();
+            const isOwner = movie.owner == req.user._id;
+
+            res.render('details', {movie, isOwner});
+        });
+    -after that we go inside details page to implement the isOwner logic:
+         {{#if isOwner}}
+            <div class="details-btn">
+                <a href="/edit/{{movie._id}}" id="edit-button">Edit</a>
+                <a href="/delete/{{movie._id}}" id="delete-button">Delete</a>
+            </div>
+        {{/if}}
 
 
 
