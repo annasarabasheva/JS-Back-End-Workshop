@@ -1101,3 +1101,11 @@ router.post('/register', async (req, res) => {
             res.clearCookie('auth');
             res.redirect('/')
         })
+-NOW LETS DO THE DELETE BUTTON:
+    -we go inside createController to get the delete method:
+        router.get('/delete/:movieId', isAuth, async (req, res) => {
+            await movieService.delete(req.params.movieId);
+            res.redirect('/')
+        });
+    -and then inside movieService to implement the logic for the delete method:
+        exports.delete = (movieId) => Movie.findByIdAndDelete(movieId);
