@@ -1,12 +1,13 @@
 const router = require('express').Router();
 const movieService = require('../services/movieService');
 const castService = require('../services/castService');
+const {isAuth} = require('../middlewares/authMiddleware');
 
-router.get('/create', (req, res) => {
+router.get('/create', isAuth, (req, res) => {
     res.render('create')
 });
 
-router.post('/create', async (req, res) => {
+router.post('/create', isAuth, async (req, res) => {
     const newMovie = req.body;
     try {
         await movieService.create(newMovie);
@@ -26,7 +27,7 @@ router.get('/details/:movieId', async (req, res) => {
 
 
 
-router.get('/attach/:movieId', async (req, res) => {
+router.get('/attach/:movieId', isAuth, async (req, res) => {
     const movieId = req.params.movieId;
     const movie = await movieService.getOne(movieId).lean();
     const casts = await castService.getAll().lean();
@@ -34,7 +35,7 @@ router.get('/attach/:movieId', async (req, res) => {
 });
 
 
-router.post('/attach/:movieId', async (req, res) => {
+router.post('/attach/:movieId', isAuth, async (req, res) => {
     const castId = req.body.cast;
     const movie = await movieService.getOne(req.params.movieId);
     movie.casts.push(castId);
@@ -44,10 +45,7 @@ router.post('/attach/:movieId', async (req, res) => {
 })
 
 
-router.get('/edit/:movieId', async (req, res) => {
-    if(!req.user) {
-        return res.redirect('/login')
-    }
+router.get('/edit/:movieId', isAuth, async (req, res) => {
     const movie =  await movieService.getOne(req.params.movieId).lean();
     res.render('edit', {movie})
 });
