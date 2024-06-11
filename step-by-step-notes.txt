@@ -587,7 +587,7 @@
         exports.getOne = (movieId) =>  Movie.findById(movieId).populate('casts'); !!!!!!!!!!!!!!!!!!!!!!!!
 
 
-17.PART P OF THE WORKSHOP: Session and authentication
+17.PART 3 OF THE WORKSHOP: Session and authentication
 -first we add the new resources
 -the main.handlebars nav should look like this now because of the new pages we will add:
        <nav>
@@ -938,14 +938,14 @@ router.post('/register', async (req, res) => {
         res.render('edit', {movie})
     });
 
--   NOW LETS MAKE AUTHORIZATION: VURNI SE PAK DA GO GLEDASH CHE SE OBURKAH: 2:26:11 VUV LEKCIQTA
+-   NOW LETS MAKE AUTHORIZATION: 
     create new folder middlewares and inside it lets create authMiddleware.js 
     -its created to validate the token of the people who are logged in
     -inside index.js:
         const {auth} = require('../middlewares/authMiddleware');
 
         app.use(auth);
-    -inside jwt.js:
+    -inside jwt.js: //THIS IS TO CREATE PROMISES FOR THE jwt's methods
         const util = require('util');
         const jwt = require('jsonwebtoken');
 
@@ -976,6 +976,42 @@ router.post('/register', async (req, res) => {
         }
     -inside authService and authMiddleware we import it like this: const { SECRET } = require('../config/config');
     -inside authMiddleware:
+    const jwt = require('../lib/jwt');
+    const { SECRET } = require('../config/config');
+
+
+    exports.auth = async (req, res, next) => {
+        //get token
+        const token = req.cookies['auth'];
+
+        if (!token) {
+            return next(); //the case where you are a guest and not logged
+        }
+
+        try {
+            const decodedToken = await jwt.verify(token, SECRET);
+
+            req.user = decodedToken;
+            
+
+            next();
+        } catch {
+            res.clearCookie('auth');
+
+            res.redirect('/login');
+        }
+    }
+
+    -inside createController:
+        router.get('/edit/:movieId', async (req, res) => {
+            if(!req.user) {
+                return res.redirect('/login')
+            }
+            const movie =  await movieService.getOne(req.params.movieId).lean();
+            res.render('edit', {movie})
+        });
+
+
 
 
 
