@@ -1095,3 +1095,9 @@ router.post('/register', async (req, res) => {
 
         res.redirect('/login');
     }
+-NEXT WE NEED TO DO THE LOGOUT PAGE:
+    -inside authController:
+        router.get('/logout', (req, res) => {
+            res.clearCookie('auth');
+            res.redirect('/')
+        })
